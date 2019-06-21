@@ -17,4 +17,4 @@
   学习java爬虫后做的一个练习项目，爬取酷狗音乐网Top500的歌曲<br>
 <br>
 7.simple-second-kill:<br>
-  学习redis后做小的秒杀程序<br>
+  学习redis后做的小的秒杀程序<br>
