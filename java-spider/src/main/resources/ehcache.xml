@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd">
+
+  <!-- 磁盘缓存位置 -->
+  <diskStore path="d://ehcache"/>
+
+  <!-- 
+  
+  	defaultCache：默认缓存配置信息，如无特殊说明，则所有的缓存对象都按照这个配置处理
+   	eternal：判断是否永不过期
+    maxElementsInMemory：设置缓存上线，最多存储多少个对象
+    -->
+  <defaultCache
+          maxElementsInMemory="0"
+          eternal="true"
+          overflowToDisk="true" 
+          diskPersistent="true"
+          memoryStoreEvictionPolicy="LFU"
+         />
+
+  <!-- helloworld缓存 -->
+  <cache name="HelloWorldCache"
+         maxElementsInMemory="0"
+          eternal="true"
+          overflowToDisk="true" 
+          diskPersistent="true"
+          memoryStoreEvictionPolicy="LFU"
+          />
+</ehcache>
