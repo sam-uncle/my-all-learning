@@ -1,5 +1,10 @@
 package com.sam.pattern.proxy.jdk;
 
+import sun.misc.ProxyGenerator;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+
 public class JdkProxyTest {
 
     public static void main(String[] args) {
@@ -8,6 +13,8 @@ public class JdkProxyTest {
         obj.findLove();
         System.out.println(obj.getClass());
 
+        Person person = (Person) new JDK58().getInstance(new Xiaoming());
+        person.findJob();
 
         /**
          * 原理：
@@ -18,7 +25,17 @@ public class JdkProxyTest {
          * 5.再重新加载到JVM中运行
          * 以上这个过程就叫字节码重组
          */
-        Person person = (Person) new JDK58().getInstance(new Xiaoming());
-        person.findJob();
+
+        //JDK中有个规范，只要是$开头的一般都是自动生成的
+
+        //通过反编译工具可以查看源代码
+        byte[] bytes = ProxyGenerator.generateProxyClass("$Proxy0", new Class[]{Person.class});
+        try {
+            FileOutputStream os = new FileOutputStream("E://$Proxy.class");
+            os.write(bytes);
+            os.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
