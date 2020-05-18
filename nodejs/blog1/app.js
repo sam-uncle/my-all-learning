@@ -54,11 +54,15 @@ const serverHandler = (req, res) => {
 
         
         //处理blog路由
-        const blogDate = handlerBlogRouter(req, res);
-        if (blogDate) {
-            res.end(
-                JSON.stringify(blogDate)
-            )
+        const blogResult = handlerBlogRouter(req, res);
+        if(blogResult){
+            blogResult.then((blogDate)=>{
+                if (blogDate) {
+                    res.end(
+                        JSON.stringify(blogDate)
+                    )
+                }
+            })
             return
         }
 
