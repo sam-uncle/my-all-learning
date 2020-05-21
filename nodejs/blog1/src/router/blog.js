@@ -1,6 +1,16 @@
 const {getList, getDetail, newBlog, updateBlog, delBlog} = require('../controller/blog')
 const {SuccessModel, ErrorModel} = require('../model/resModel')
 
+//统一的登录雁阵函数
+const  loginCheck = (req) =>{
+    if(!req.session.username){
+        return Promise.resolve(
+            new ErrorModel('尚未登录')
+        )
+    }
+
+}
+
 const handleBlogRouter = (req, res) =>{
     const method = req.method
     const id = req.query.id
@@ -37,7 +47,14 @@ const handleBlogRouter = (req, res) =>{
         // const data = newBlog(req.body)
 
         // return new SuccessModel(data,'新建博客成功')
-        req.body.author='zhangsan' //假数据，待开发登录后再改成真实数据
+
+
+        const loginCheckResult = loginCheck(req)
+        if(loginCheckResult){
+            //未登录
+            return loginCheckResult;
+        }
+        req.body.author=req.session.username
         const result = newBlog(req.body)
         return result.then(data =>{
             return new SuccessModel(data)
@@ -48,22 +65,39 @@ const handleBlogRouter = (req, res) =>{
     if(method === 'POST' && req.path === '/api/blog/update'){
         
         const result = updateBlog(id, req.body)
-        if(result){
-            return new SuccessModel(result, '博客更新成功')
-        } else {
+        return result.then(val =>{
+            if(val){
+                return new SuccessModel(result, '博客更新成功')
+            }
             return new ErrorModel(result, '博客更新失败')
-        }
+        })
+        // if(result){
+        //     return new SuccessModel(result, '博客更新成功')
+        // } else {
+        //     return new ErrorModel(result, '博客更新失败')
+        // }
         
     }
 
     //删除博客
     if(method === 'POST' && req.path === '/api/blog/del'){
+
+        req.body.author=req.session.username
         const result = delBlog(id, req.body)
-        if(result){
-            return new SuccessModel(result, '删除成功')
-        } else {
-            return new ErrorModel(result, '删除失败')
-        }
+        
+        
+        return result.then(val => {
+            if(val){
+                return new SuccessModel(result, '删除成功')
+            } else {
+                return new ErrorModel(result, '删除失败')
+            }
+        })
+        // if(result){
+        //     return new SuccessModel(result, '删除成功')
+        // } else {
+        //     return new ErrorModel(result, '删除失败')
+        // }
     }
 
 }

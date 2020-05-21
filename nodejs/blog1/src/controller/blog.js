@@ -1,5 +1,4 @@
 const {exec} = require('../db/mysql')
-const mysql = require('../db/mysql')
 
 const getList = (author, keyword) =>{
     let sql = 'select * from t_blog where 1 = 1'
@@ -55,13 +54,34 @@ const newBlog = (blogData = {}) =>{
 //更新博客
 const updateBlog = (id, blogData = {}) =>{
     //blogData 是一個對象，包含titile context
-    console.log("updateBlog blogData....", id, blogData)
-    return true
+    // console.log("updateBlog blogData....", id, blogData)
+
+    const title = blogData.title
+    const content = blogData.content
+    
+    const sql = `update t_blog set title = '${title}', content='${content}' where id='${id}'`
+
+    return exec(sql).then(updateData => {
+        console.log('updateData is ', updateData)
+        if(updateData.affectedRows > 0) {
+            return true
+        }
+        return false
+    })
 }
 
 const delBlog = (id, blogData) => {
     console.log('delBlog ....', id ,blogData)
-    return true
+
+    const author = blogData.author
+    const sql = `delete from t_blog where id = '${id}' and author='${author}'`
+    return exec(sql).then(delData => {
+        console.log('delData is ', delData)
+        if(delData.affectedRows > 0) {
+            return true
+        }
+        return false
+    })
 }
 
 module.exports={
